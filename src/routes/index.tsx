@@ -7,6 +7,8 @@ import { HeroVideo } from "@/components/hero-video";
 import { ProjectGallery } from "@/components/project-gallery";
 import { TrustBar } from "@/components/trust-bar";
 import { FaqSection } from "@/components/faq-section";
+import { ClimateVisualizer } from "@/components/climate-visualizer";
+import { openQuoteModal } from "@/components/quote-modal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -53,12 +55,18 @@ function Index() {
 
           {/* Action CTAs: Call & Free Quote */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button asChild size="lg" className="h-12 shadow-md">
+            <Button asChild size="lg" className="h-12 shadow-lg click-effect font-bold glow-primary">
               <a href={phoneHref}><Phone className="size-4" /> Call Now</a>
             </Button>
 
-            <Button asChild size="lg" variant="secondary" className="h-12 shadow-md font-semibold">
-              <Link to="/contact">Request a Free Quote <ArrowRight className="size-4" /></Link>
+            <Button
+              type="button"
+              size="lg"
+              onClick={openQuoteModal}
+              className="h-12 shadow-lg font-bold bg-white text-slate-950 hover:bg-slate-100 click-effect cursor-pointer"
+            >
+              <span>Request a Free Quote</span>
+              <ArrowRight className="size-4 ml-1 text-primary" />
             </Button>
           </div>
 
@@ -131,9 +139,17 @@ function Index() {
             </div>
           </div>
 
-          <div className="mt-8 flex gap-4">
-            <Button asChild variant="outline"><Link to="/services">View All Services <ArrowRight /></Link></Button>
-            <Button asChild><Link to="/contact">Request a Home Survey</Link></Button>
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Button asChild variant="outline" className="click-effect">
+              <Link to="/services">View All Services <ArrowRight className="size-4" /></Link>
+            </Button>
+            <Button
+              type="button"
+              onClick={openQuoteModal}
+              className="click-effect font-bold shadow-md glow-primary cursor-pointer"
+            >
+              Request a Home Survey
+            </Button>
           </div>
         </div>
 
@@ -181,6 +197,9 @@ function Index() {
         </div>
       </div>
     </section>
+
+    {/* INTERACTIVE CLIMATE SIMULATOR (MODERN CLICK EXPERIENCE) */}
+    <ClimateVisualizer />
 
     {/* COMPLETE REAL WORK PHOTO GALLERY */}
     <ProjectGallery />

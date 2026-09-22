@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Check, Eye, Maximize2, Sparkles, X, ZoomIn } from "lucide-react";
+import { Check, Eye, Maximize2, Phone, Sparkles, X, ZoomIn } from "lucide-react";
+import { openQuoteModal } from "@/components/quote-modal";
 
 export interface ProjectItem {
   id: string;
@@ -20,7 +21,7 @@ export const PROJECTS: ProjectItem[] = [
     location: "Solihull, Birmingham",
     description:
       "High-spec Daikin indoor unit installed flush with ceiling line, perfectly complementing contemporary architectural lighting and neutral palette.",
-    highlights: ["Whisper-quiet operation", "A+++ energy efficiency", "Smart WiFi app control"],
+    highlights: ["Whisper-quiet operation (19dB)", "A+++ energy efficiency", "Smart WiFi app control"],
   },
   {
     id: "outdoor-condenser",
@@ -30,7 +31,7 @@ export const PROJECTS: ProjectItem[] = [
     location: "Harborne, Birmingham",
     description:
       "Daikin outdoor condenser mounted on anti-vibration rubber feet with bespoke color-matched black trunking routed neatly around brickwork and patio doors.",
-    highlights: ["Zero messy external cables", "Anti-vibration base", "Weatherproof aesthetic trunking"],
+    highlights: ["Zero messy external cables", "Anti-vibration rubber base", "Weatherproof aesthetic trunking"],
   },
   {
     id: "ducted-diffuser",
@@ -76,7 +77,7 @@ export function ProjectGallery() {
               Recent Work in Birmingham & West Midlands
             </h2>
             <p className="mt-4 max-w-2xl text-base text-muted-foreground">
-              Every home and business is unique. Explore actual on-site photos of our clean indoor units, tidy outdoor pipework, and commercial installations.
+              Every home and business is unique. Click on any installation below to view high-resolution details, technical equipment specs, and airflow benefits.
             </p>
           </div>
 
@@ -87,9 +88,9 @@ export function ProjectGallery() {
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all cursor-pointer click-effect ${
                   selectedCategory === cat
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    ? "bg-primary text-primary-foreground border-primary shadow-sm glow-primary"
                     : "bg-secondary/70 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
                 }`}
               >
@@ -104,7 +105,8 @@ export function ProjectGallery() {
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              onClick={() => setActiveModalProject(project)}
+              className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 hover:border-primary/50 cursor-pointer click-effect"
             >
               {/* Image Container */}
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
@@ -127,16 +129,13 @@ export function ProjectGallery() {
                   </span>
                 </div>
 
-                {/* Enlarge Button */}
-                <button
-                  type="button"
-                  onClick={() => setActiveModalProject(project)}
-                  aria-label={`View larger image of ${project.title}`}
-                  className="absolute top-3 right-3 grid size-8 place-items-center rounded-full bg-slate-950/70 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-primary-foreground cursor-pointer shadow-md"
-                  title="View full details"
+                {/* Enlarge Button Indicator */}
+                <div
+                  className="absolute top-3 right-3 grid size-8 place-items-center rounded-full bg-slate-950/70 text-white opacity-90 group-hover:opacity-100 group-hover:bg-primary transition-all shadow-md"
+                  title="Click to expand"
                 >
                   <Eye className="size-4" />
-                </button>
+                </div>
 
                 {/* Overlay details at image bottom */}
                 <div className="absolute bottom-3 left-3 right-3 text-white">
@@ -151,7 +150,7 @@ export function ProjectGallery() {
 
               {/* Card Footer Details */}
               <div className="flex flex-1 flex-col justify-between p-4 bg-card">
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                   {project.description}
                 </p>
 
@@ -165,14 +164,10 @@ export function ProjectGallery() {
                     ))}
                   </ul>
 
-                  <button
-                    type="button"
-                    onClick={() => setActiveModalProject(project)}
-                    className="mt-3.5 w-full inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-secondary/50 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary hover:text-primary transition-colors cursor-pointer"
-                  >
+                  <div className="mt-3.5 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-border bg-secondary/50 py-2 text-xs font-bold text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors">
                     <ZoomIn className="size-3.5" />
-                    View Details
-                  </button>
+                    <span>Click to View Setup & Specs</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -185,11 +180,11 @@ export function ProjectGallery() {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/85 p-4 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setActiveModalProject(null)}
         >
           <div
-            className="relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-2xl bg-card border border-border shadow-2xl flex flex-col md:flex-row"
+            className="relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-2xl bg-card border border-white/15 shadow-2xl flex flex-col md:flex-row animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Close Button */}
@@ -211,7 +206,7 @@ export function ProjectGallery() {
               />
               <div className="absolute bottom-3 left-3">
                 <span className="rounded-md bg-slate-950/90 px-2.5 py-1 text-xs font-bold text-highlight border border-white/15">
-                  {activeModalProject.category}
+                  {activeModalProject.category} Installation
                 </span>
               </div>
             </div>
@@ -231,7 +226,7 @@ export function ProjectGallery() {
 
                 <div className="mt-6">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                    Installation Highlights
+                    Technical Highlights
                   </h4>
                   <ul className="mt-3 space-y-2">
                     {activeModalProject.highlights.map((h) => (
@@ -244,15 +239,24 @@ export function ProjectGallery() {
                 </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-border">
-                <p className="text-xs text-muted-foreground">
-                  Need a similar installation for your home or business?
-                </p>
+              <div className="mt-8 pt-4 border-t border-border space-y-2.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveModalProject(null);
+                    openQuoteModal();
+                  }}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-lg glow-primary hover:bg-primary/90 transition-all click-effect cursor-pointer"
+                >
+                  <Sparkles className="size-4" />
+                  <span>Request Survey for This Setup</span>
+                </button>
                 <a
                   href="tel:+447932794629"
-                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary py-2.5 text-sm font-bold text-primary-foreground shadow hover:bg-primary/90 transition-colors"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-foreground hover:bg-secondary/80 transition-colors"
                 >
-                  Call +44 7932 794629 for a Free Quote
+                  <Phone className="size-3.5 text-primary" />
+                  <span>Direct Call: +44 7932 794629</span>
                 </a>
               </div>
             </div>

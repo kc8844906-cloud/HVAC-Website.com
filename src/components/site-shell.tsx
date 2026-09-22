@@ -3,6 +3,7 @@ import { Clock3, MapPin, Menu, Phone, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { WhatsAppLogo, WHATSAPP_URL } from "@/components/whatsapp-widget";
+import { QuoteModal, openQuoteModal } from "@/components/quote-modal";
 
 const navItems = [
   { to: "/" as const, label: "Home" },
@@ -87,14 +88,20 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
           {/* Desktop Direct Call & Free Quote Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button asChild size="default" className="shadow-sm">
-              <a href={phoneHref} className="flex items-center gap-2">
+            <Button asChild size="default" className="shadow-sm click-effect">
+              <a href={phoneHref} className="flex items-center gap-2 font-bold">
                 <Phone className="size-4" />
                 <span>Call Now</span>
               </a>
             </Button>
-            <Button asChild variant="outline" size="default">
-              <Link to="/contact">Get Free Quote</Link>
+            <Button
+              type="button"
+              variant="outline"
+              size="default"
+              onClick={openQuoteModal}
+              className="click-effect font-bold border-primary/40 hover:bg-primary hover:text-primary-foreground transition-all"
+            >
+              Get Free Quote
             </Button>
           </div>
 
@@ -102,7 +109,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="lg:hidden click-effect"
             onClick={() => setOpen((value) => !value)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
@@ -129,19 +136,22 @@ export function SiteShell({ children }: { children: ReactNode }) {
               <div className="mt-4 grid grid-cols-2 gap-3 pt-2">
                 <a
                   href={phoneHref}
-                  className="flex items-center justify-center gap-2 rounded-md bg-primary py-3 text-xs font-bold text-primary-foreground shadow"
+                  className="flex items-center justify-center gap-2 rounded-md bg-primary py-3 text-xs font-bold text-primary-foreground shadow click-effect"
                 >
                   <Phone className="size-4" />
                   <span>Call Now</span>
                 </a>
 
-                <Link
-                  to="/contact"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-md border border-border bg-secondary py-3 text-xs font-bold text-foreground shadow"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    openQuoteModal();
+                  }}
+                  className="flex items-center justify-center gap-2 rounded-md border border-border bg-secondary py-3 text-xs font-bold text-foreground shadow click-effect cursor-pointer"
                 >
                   <span>Request Quote</span>
-                </Link>
+                </button>
               </div>
             </div>
           </nav>
@@ -201,19 +211,23 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <div className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-2 gap-2.5 rounded-xl bg-slate-950/90 p-1.5 backdrop-blur-lg border border-white/10 shadow-2xl lg:hidden">
         <a
           href={phoneHref}
-          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-primary font-bold text-xs text-primary-foreground shadow"
+          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-primary font-bold text-xs text-primary-foreground shadow click-effect"
         >
           <Phone className="size-4" />
           <span>Call Now</span>
         </a>
 
-        <Link
-          to="/contact"
-          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-secondary font-bold text-xs text-foreground shadow border border-border"
+        <button
+          type="button"
+          onClick={openQuoteModal}
+          className="flex h-12 items-center justify-center gap-2 rounded-lg bg-secondary font-bold text-xs text-foreground shadow border border-border click-effect cursor-pointer"
         >
           <span>Get Free Quote</span>
-        </Link>
+        </button>
       </div>
+
+      {/* Global Interactive Quote & Survey Modal */}
+      <QuoteModal />
     </div>
   );
 }
@@ -241,15 +255,21 @@ export function CallBand() {
         </div>
 
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-          <Button asChild size="lg" variant="secondary" className="shadow">
-            <a href={phoneHref} className="flex items-center gap-2">
+          <Button asChild size="lg" variant="secondary" className="shadow click-effect">
+            <a href={phoneHref} className="flex items-center gap-2 font-bold">
               <Phone className="size-4" />
               <span>{phoneDisplay}</span>
             </a>
           </Button>
 
-          <Button asChild size="lg" variant="outline" className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-            <Link to="/contact">Request a Quote</Link>
+          <Button
+            type="button"
+            size="lg"
+            variant="outline"
+            onClick={openQuoteModal}
+            className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-primary click-effect font-bold cursor-pointer"
+          >
+            <span>Request a Quote</span>
           </Button>
         </div>
       </div>

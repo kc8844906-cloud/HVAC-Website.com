@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, HelpCircle, Phone, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { openQuoteModal } from "@/components/quote-modal";
 
 const FAQS = [
   {
@@ -101,8 +102,14 @@ export function FaqSection() {
                 <span>Call +44 7932 794629</span>
               </a>
             </Button>
-            <Button asChild variant="outline" size="default" className="w-full sm:w-auto">
-              <Link to="/contact">Ask a Question</Link>
+            <Button
+              type="button"
+              variant="outline"
+              size="default"
+              onClick={openQuoteModal}
+              className="w-full sm:w-auto click-effect font-bold"
+            >
+              Ask a Question / Request Survey
             </Button>
           </div>
         </div>
